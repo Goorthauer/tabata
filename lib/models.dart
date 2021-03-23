@@ -151,6 +151,18 @@ class Workout {
     _nextStep();
     _onStateChange();
   }
+  prevStep(){
+    _prevStep();
+    _onStateChange();
+  }
+
+  startInitial(){
+    _step = WorkoutState.initial;
+    _set = 0;
+    _rep = 0;
+    _onlyLeftTotalTime =  Duration(seconds: 0);
+    _onStateChange();
+  }
   /// Starts or resumes the workout
   start() {
     _onlyLeftSet = _config.sets;
@@ -217,6 +229,13 @@ class Workout {
       _startSet();
     }
   }
+  _prevStep() {
+    if (_step == WorkoutState.exercising) {
+      if( rep > 0 && rep <=_config.reps) {
+        _prevRep();
+      }
+    }
+  }
 
   Future _playSound(String sound) {
     if (_settings.silentMode) {
@@ -236,6 +255,13 @@ class Workout {
     _playSound(_settings.startRest);
   }
 
+  _prevRep(){
+    _rep--;
+    _onlyLeftRep +=1;
+    _step = WorkoutState.exercising;
+    _onlyLeftTotalTime += _timeLeft;
+    _timeLeft = _config.exerciseTime;
+  }
   _startRep() {
     _rep++;
     _onlyLeftRep -=1;

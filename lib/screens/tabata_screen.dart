@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:Just_tabata_timer/widgets/durationseconpicker.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,12 +90,12 @@ class _TabataScreenState extends State<TabataScreen> {
           ListTile(
             title: Text('Подготовка'),
             subtitle: Text(formatTime(_tabata.startDelay)),
-            leading: Icon(Icons.accessible_forward),
+            leading: Icon(Icons.lightbulb),
             onTap: () {
               showDialog<Duration>(
                 context: context,
                 builder: (BuildContext context) {
-                  return DurationSecondPickerPickerDialog(
+                  return DurationPickerDialog(
                     initialDuration: _tabata.startDelay,
                     title: Text('Время подготовки до старта'),
                   );
@@ -240,7 +239,7 @@ class _TabataScreenState extends State<TabataScreen> {
                 (_tabata.breakTime
                     // * _tabata.sets
                 ))),
-            leading: Icon(Icons.timelapse),
+            leading: Icon(Icons.av_timer),
           ),
         ],
       ),

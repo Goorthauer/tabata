@@ -8,15 +8,15 @@ import '../utils.dart';
 String stepName(WorkoutState step) {
   switch (step) {
     case WorkoutState.exercising:
-      return 'Работа';
+      return 'Работаем';
     case WorkoutState.resting:
-      return 'Отдых';
+      return 'Отдыхаем';
     case WorkoutState.breaking:
       return 'Перерыв';
     case WorkoutState.finished:
       return 'Конец';
     case WorkoutState.starting:
-      return 'Подготовка';
+      return 'Приготовьтесь';
     default:
       return '';
   }
@@ -41,7 +41,7 @@ class Language {
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   Workout _workout;
-  // const Language languages = Language('Pусский', 'ru_RU');
+  static const languages = Language('Pусский', 'ru_RU');
 
   @override
   initState() {
@@ -84,6 +84,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   _start() {
+    _workout.startInitial();
     _workout.start();
     Screen.keepOn(true);
   }
@@ -91,21 +92,26 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     _workout.nextStep();
     Screen.keepOn(true);
   }
+  _prevWorkoutStep() {
+    _workout.prevStep();
+    Screen.keepOn(true);
+  }
 
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var lightTextColor = theme.textTheme.bodyText2.color.withOpacity(0.9);
-    var textStyleOne = TextStyle(fontSize: 60.0, color: Colors.white);
-    var textStyleTwo = TextStyle(fontSize: 30.0, color: Color(0xFFE8E8E8));
+    var textStyleOne = TextStyle(fontSize: 46.0, color: Colors.white);
+    var textStyleTwo = TextStyle(fontSize: 25.0, color: Color(0xFFE8E8E8));
     return Scaffold(
       body: Container(
         color: _getBackgroundColor(theme),
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        alignment: Alignment.center,
         child: Column(
           children: <Widget>[
             Expanded(child: Row()),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(stepName(_workout.step), style:textStyleOne)
+              Text(stepName(_workout.step),style:textStyleOne)
             ]),
             Divider(height: 32, color: lightTextColor),
             Container(
@@ -121,59 +127,26 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
                 TableCell(child: Text('Сеты', style: textStyleTwo)),
                 TableCell(child: Text('Круги', style: textStyleTwo)),
                 TableCell(
-                    child: Text('Время',
+                    child: Text('Общее время',
                         textAlign: TextAlign.end,
                         style: textStyleTwo))
               ]),
-              TableRow(children: [
+              TableRow(
+                  children: [
                 TableCell(
                   child:
-                      Text('${_workout.set}', style:textStyleOne),
+                  Text('${_workout.onlyLeftSet}', style: textStyleOne)
                 ),
                 TableCell(
                   child:
-                      Text('${_workout.rep}', style:textStyleOne),
+                  Text('${_workout.onlyLeftRep}', style: textStyleOne)
                 ),
                 TableCell(
                     child: Text(
-                  formatTime(_workout.totalTime),
+                  formatTime(_workout.totalTime) ,
                   style: textStyleOne,
                   textAlign: TextAlign.right,
                 ))
-              ]),
-            ]),
-            Divider(height: 32, color: lightTextColor),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text("Осталось", style: textStyleOne)
-            ]),
-            Table(columnWidths: {
-              0: FlexColumnWidth(0.5),
-              1: FlexColumnWidth(0.5),
-              2: FlexColumnWidth(1.0)
-            }, children: [
-              TableRow(children: [
-                TableCell(child: Text('Сеты', style: textStyleTwo)),
-                TableCell(child: Text('Круги', style: textStyleTwo)),
-                TableCell(
-                    child: Text('Время',
-                        textAlign: TextAlign.end,
-                        style: textStyleTwo))
-              ]),
-              TableRow(children: [
-                TableCell(
-                  child:
-                  Text('${_workout.onlyLeftSet}', style: textStyleOne),
-                ),
-                TableCell(
-                  child:
-                  Text('${_workout.onlyLeftRep}', style: textStyleOne),
-                ),
-                TableCell(
-                    child: Text(
-                      formatTime(_workout.onlyLeftTime),
-                      style: textStyleOne,
-                      textAlign: TextAlign.right,
-                    ))
               ]),
             ]),
             Expanded(child: _buildButtonBar()),
@@ -185,18 +158,31 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   Widget _buildButtonBar() {
     if (_workout.step == WorkoutState.finished) {
-      return Container();
+return
+      Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton(
+            onPressed: _start,
+            child: Icon(Icons.refresh ,color: Color(0xFFFFFFFF),size: 48.0),
+          ));
     }
   var firstButton =   Align(
         alignment: Alignment.bottomCenter,
         child: TextButton(
-            onPressed: _workout.isActive ? _pause : _start,
-            child: Icon(_workout.isActive ? Icons.pause : Icons.play_arrow,color: Color(0xFFFFFFFF)),));
- var secondButton =   Align(        alignment: Alignment.bottomRight,
+          onPressed: _prevWorkoutStep,
+            child: Icon(Icons.skip_previous,color: Color(0xFFFFFFFF)),));
+  var secondButton =
+  Align(
+        alignment: Alignment.bottomCenter,
+        child: TextButton(
+          onPressed: _workout.isActive ? _pause : _start,
+          child: Icon(_workout.isActive ? Icons.pause : Icons.play_arrow,color: Color(0xFFFFFFFF),size: 48.0),
+  ));
+ var threeButton =   Align(        alignment: Alignment.bottomRight,
         child: TextButton(
             onPressed: _nextWorkoutStep,
-          child: Icon(Icons.arrow_forward,color: Color(0xFFFFFFFF)))
+          child: Icon(Icons.skip_next,color: Color(0xFFFFFFFF)))
     );
-return new Row(mainAxisAlignment: MainAxisAlignment.center,children: [firstButton,secondButton]);
+return new Row(mainAxisAlignment: MainAxisAlignment.center,children: [firstButton,secondButton,threeButton]);
   }
 }
