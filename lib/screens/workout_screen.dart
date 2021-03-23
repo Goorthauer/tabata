@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:screen/screen.dart';
-import 'package:flutter_speech/flutter_speech.dart';
+// import 'package:flutter_speech/flutter_speech.dart';
 
 import '../models.dart';
 import '../utils.dart';
@@ -41,7 +41,7 @@ class Language {
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
   Workout _workout;
-  const languages = Language('Pусский', 'ru_RU');
+  // const Language languages = Language('Pусский', 'ru_RU');
 
   @override
   initState() {
