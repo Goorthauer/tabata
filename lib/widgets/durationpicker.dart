@@ -41,7 +41,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
           listViewWidth: 65,
           initialValue: minutes,
           minValue: 0,
-          maxValue: 10,
+          maxValue: 99,
           zeroPad: true,
           onChanged: (value) {
             this.setState(() {
